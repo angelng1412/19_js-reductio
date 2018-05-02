@@ -3,15 +3,29 @@ var string = '[{"females": 1567000, "country": "United States", "age": 0, "males
 var data = JSON.parse(string);
 //console.log(data);
 
-var averageAge = function(gender){
-    var temp = data.map( function(x) {return x[gender] * x["age"]; });
-    return temp.reduce(function(x, y) { return x + y; }) / total(gender); 
-}
-
-var total = function(gender){
+var totalGender = function(gender){
     var temp = data.map(function(x) { return x[gender]; });
     return temp.reduce(function(x, y) { return x + y; });
 }
 
+var averageAge = function(gender){
+    var temp = data.map( function(x) { return x[gender] * x["age"]; });
+    return Math.round( temp.reduce(function(x, y) { return x + y; }) / totalGender(gender) ); 
+}
+
+var minors = function(){
+    var temp = data.map(function(x) { if (x["age"] < 18) { return x["males"] + x["females"] } else { return 0 }});
+    console.log(temp); 
+    return temp.reduce(function(x, y) { return x + y; }); 
+}
+
+
+document.getElementById('popFemale').innerHTML = "Total population of females: " + String(totalGender("females"));
+document.getElementById('popMale').innerHTML = "Total population of males: " + String(totalGender("males"));
+document.getElementById('ageFemale').innerHTML = "Average age of females: " + String(averageAge("females"));
+document.getElementById('ageMale').innerHTML = "Average age of males: " + String(averageAge("males"));
+document.getElementById('minors').innerHTML = "Total number of minors (under 18): " + String(minors());
+
+//console.log(minors()); 
 console.log(averageAge("males"));
 console.log(averageAge("females"));
